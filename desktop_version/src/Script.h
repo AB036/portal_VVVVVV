@@ -6,7 +6,8 @@
 
 #include "Enums.h"
 
-#define filllines(lines) commands.insert(commands.end(), lines, lines + sizeof(lines)/sizeof(lines[0]))
+
+class KeyPoll; class Graphics; class Game; class mapclass; class entityclass; class UtilityClass;class musicclass;
 
 
 class scriptclass
@@ -16,37 +17,41 @@ public:
 
     scriptclass();
 
-    void load(std::string t);
-    void loadother(std::string t);
+	void load(std::string t);
+	void loadother(std::string t);
 
 
     void inline add(std::string t)
     {
-        commands.push_back(t);
+        commands[scriptlength] = t;
+        scriptlength++;
     }
 
     void clearcustom();
 
     void tokenize(std::string t);
 
-    void run();
+    void run(KeyPoll& key, Graphics& dwgfx, Game& game, mapclass& map,
+             entityclass& obj, UtilityClass& help, musicclass& music);
 
-    void resetgametomenu();
+    void resetgametomenu(Graphics& dwgfx, Game& game,mapclass& map,
+                         entityclass& obj, UtilityClass& help, musicclass& music);
 
-    void startgamemode(int t);
+    void startgamemode(int t, KeyPoll& key, Graphics& dwgfx, Game& game, mapclass& map,
+                       entityclass& obj, UtilityClass& help, musicclass& music);
 
-    void teleport();
+    void teleport(Graphics& dwgfx, Game& game, mapclass& map,
+                  entityclass& obj, UtilityClass& help, musicclass& music);
 
-    void hardreset();
-
-    void loadcustom(std::string t);
+    void hardreset(KeyPoll& key, Graphics& dwgfx, Game& game,mapclass& map,
+                   entityclass& obj, UtilityClass& help, musicclass& music);
 
     //Script contents
     std::vector<std::string> commands;
     std::vector<std::string> words;
     std::vector<std::string> txt;
     std::string scriptname;
-    int position;
+    int position, scriptlength;
     int looppoint, loopcount;
 
     int scriptdelay;
@@ -58,6 +63,7 @@ public:
     int textx;
     int texty;
     int r,g,b;
+    int txtnumlines;
 
     //Misc
     int i, j, k;
@@ -65,7 +71,5 @@ public:
     //Custom level stuff
      std::vector <std::string>  customscript;
 };
-
-extern scriptclass script;
 
 #endif /* SCRIPT_H */

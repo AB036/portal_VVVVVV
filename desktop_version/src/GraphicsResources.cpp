@@ -32,18 +32,28 @@ SDL_Surface* LoadImage(const char *filename, bool noBlend = true, bool noAlpha =
 	unsigned char *data;
 	unsigned int width, height;
 
-	unsigned char *fileIn = NULL;
-	size_t length = 0;
-	FILESYSTEM_loadFileToMemory(filename, &fileIn, &length);
-	if (noAlpha)
+	if (strcmp(filename, "portals.png") == 0)
 	{
-		lodepng_decode24(&data, &width, &height, fileIn, length);
+		width = 96;
+		height = 24;
+		data = (unsigned char *) malloc(width*height*4*sizeof(unsigned char));
+		#include "portal_sprite"  // why yes, I hardcode my sprites, how did you know?
 	}
 	else
 	{
-		lodepng_decode32(&data, &width, &height, fileIn, length);
+		unsigned char *fileIn = NULL;
+		size_t length = 0;
+		FILESYSTEM_loadFileToMemory(filename, &fileIn, &length);
+		if (noAlpha)
+		{
+			lodepng_decode24(&data, &width, &height, fileIn, length);
+		}
+		else
+		{
+			lodepng_decode32(&data, &width, &height, fileIn, length);
+		}
+		FILESYSTEM_freeMemory(&fileIn);
 	}
-	FILESYSTEM_freeMemory(&fileIn);
 
 	loadedImage = SDL_CreateRGBSurfaceFrom(
 		data,
@@ -74,6 +84,7 @@ SDL_Surface* LoadImage(const char *filename, bool noBlend = true, bool noAlpha =
 	}
 	else
 	{
+		printf("Image not found: %s\n", filename);
 		fprintf(stderr,"Image not found: %s\n", filename);
 		SDL_assert(0 && "Image not found! See stderr.");
 		return NULL;
@@ -105,6 +116,7 @@ void GraphicsResources::init(void)
 	im_image10 =		LoadImage("graphics/ending.png");
 	im_image11 =		LoadImage("graphics/site4.png");
 	im_image12 =		LoadImage("graphics/minimap.png");
+	im_portals =		LoadImage("portals.png");
 }
 
 

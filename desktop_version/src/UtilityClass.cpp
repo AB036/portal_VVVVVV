@@ -58,7 +58,7 @@ const char *GCChar(SDL_GameControllerButton button)
 int ss_toi( std::string _s )
 {
 	std::istringstream i(_s);
-	int x = 0;
+	int x;
 	i >> x;
 	return x;
 }
@@ -132,7 +132,7 @@ std::string UtilityClass::twodigits( int t )
 std::string UtilityClass::timestring( int t )
 {
 	//given a time t in frames, return a time in seconds
-	std::string tempstring = "";
+	tempstring = "";
 	temp = (t - (t % 30)) / 30;
 	if (temp < 60)   //less than one minute
 	{
@@ -206,16 +206,4 @@ void UtilityClass::updateglow()
 		glow-=2;
 		if (glow < 2) glowdir = 0;
 	}
-}
-
-bool is_positive_num(const std::string& str)
-{
-	for (size_t i = 0; i < str.length(); i++)
-	{
-		if (!std::isdigit(str[i]))
-		{
-			return false;
-		}
-	}
-	return true;
 }

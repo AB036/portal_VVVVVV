@@ -1,11 +1,12 @@
-#if !defined(NO_CUSTOM_LEVELS)
-
 #ifndef EDITOR_H
 #define EDITOR_H
 
 #include <vector>
 #include <string>
 #include "Script.h"
+
+class KeyPoll; class Graphics; class Game; class mapclass; class entityclass; class UtilityClass;
+
 
 class edentities{
 public:
@@ -45,7 +46,8 @@ struct LevelMetaData
 };
 
 
-extern std::vector<edentities> edentity;
+extern edentities edentity[3000];
+extern scriptclass script;
 
 class EditorData
 {
@@ -59,6 +61,7 @@ class EditorData
 	}
 
 
+	int numedentities;
 	std::string title;
 	std::string creator;
 
@@ -69,7 +72,8 @@ class EditorData
 private:
 
 
-	EditorData()
+	EditorData():
+	numedentities(0)
 	{
 	}
 
@@ -89,13 +93,12 @@ class editorclass{
   std::vector<std::string> directoryList;
   std::vector<LevelMetaData> ListOfMetaData;
 
-  void loadZips();
   void getDirectoryData();
   bool getLevelMetaData(std::string& filename, LevelMetaData& _data );
 
   void saveconvertor();
   void reset();
-  std::vector<int> loadlevel(int rxi, int ryi);
+  void loadlevel(int rxi, int ryi);
 
   void placetile(int x, int y, int t);
 
@@ -124,9 +127,9 @@ class editorclass{
 
   int backmatch(int x, int y);
 
-  bool load(std::string& _path);
-  bool save(std::string& _path);
-  void generatecustomminimap();
+  void load(std::string& _path);
+  void save(std::string& _path);
+  void generatecustomminimap(Graphics& dwgfx, mapclass& map);
   int edgetile(int x, int y);
   int warpzoneedgetile(int x, int y);
   int outsideedgetile(int x, int y);
@@ -138,7 +141,9 @@ class editorclass{
   int findtrinket(int t);
   int findcrewmate(int t);
   int findwarptoken(int t);
-  void findstartpoint();
+  void countstuff();
+  void findstartpoint(Game& game);
+  void weirdloadthing(std::string t);
   int getlevelcol(int t);
   int getenemycol(int t);
   int entcol;
@@ -147,10 +152,11 @@ class editorclass{
   int getwarpbackground(int rx, int ry);
 
   std::vector<std::string> getLevelDirFileNames( );
+  std::vector <int> swapmap;
   std::vector <int> contents;
   std::vector <int> vmult;
-  int numtrinkets();
-  int numcrewmates();
+  int numtrinkets;
+  int numcrewmates;
   edlevelclass level[400]; //Maxwidth*maxheight
   int kludgewarpdir[400]; //Also maxwidth*maxheight
 
@@ -201,8 +207,9 @@ class editorclass{
 
   bool scripteditmod;
   int scripthelppage, scripthelppagedelay;
-  std::vector<std::string> sb;
+  std::string sb[500];
   std::string sbscript;
+  int sblength;
   int sbx, sby;
   int pagey;
 
@@ -219,18 +226,21 @@ class editorclass{
   void clearscriptbuffer();
   void gethooks();
   bool checkhook(std::string t);
-  std::vector<std::string> hooklist;
+  std::string hooklist[500];
+  int numhooks;
 
   int hookmenupage, hookmenu;
 
   //Direct Mode variables
   int dmtile;
   int dmtileeditor;
-
-  int returneditoralpha;
 };
 
 void addedentity(int xp, int yp, int tp, int p1=0, int p2=0, int p3=0, int p4=0, int p5=320, int p6=240);
+
+void naddedentity(int xp, int yp, int tp, int p1=0, int p2=0, int p3=0, int p4=0, int p5=320, int p6=240);
+
+void copyedentity(int a, int b);
 
 void removeedentity(int t);
 
@@ -239,18 +249,15 @@ int edentat(int xp, int yp);
 
 bool edentclear(int xp, int yp);
 
-void fillbox(int x, int y, int x2, int y2, int c);
+void fillbox(Graphics& dwgfx, int x, int y, int x2, int y2, int c);
 
-void fillboxabs(int x, int y, int x2, int y2, int c);
+void fillboxabs(Graphics& dwgfx, int x, int y, int x2, int y2, int c);
 
-void editorrender();
+void editorrender(KeyPoll& key, Graphics& dwgfx, Game& game,  mapclass& map, entityclass& obj, UtilityClass& help);
 
-void editorlogic();
+void editorlogic(KeyPoll& key, Graphics& dwgfx, Game& game, entityclass& obj,  musicclass& music, mapclass& map, UtilityClass& help);
 
-void editorinput();
-
-extern editorclass ed;
+void editorinput(KeyPoll& key, Graphics& dwgfx, Game& game, mapclass& map,
+                 entityclass& obj, UtilityClass& help, musicclass& music);
 
 #endif /* EDITOR_H */
-
-#endif /* NO_CUSTOM_LEVELS */

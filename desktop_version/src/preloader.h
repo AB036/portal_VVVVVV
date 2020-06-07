@@ -5,6 +5,6 @@
 #include "Game.h"
 #include "UtilityClass.h"
 
-void preloaderrender();
+void preloaderrender(Graphics& dwgfx, Game& game, UtilityClass& help);
 
 #endif /* PRELOADER_H */

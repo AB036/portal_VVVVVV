@@ -7,12 +7,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "Graphics.h"
-
-#include <iterator>
-#include <algorithm>
-#include <iostream>
-
 #include <SDL.h>
 #include <physfs.h>
 
@@ -21,7 +15,6 @@
 #if defined(_WIN32)
 #include <windows.h>
 #include <shlobj.h>
-#include <shellapi.h>
 int mkdir(char* path, int mode)
 {
 	WCHAR utf16_path[MAX_PATH];
@@ -29,16 +22,13 @@ int mkdir(char* path, int mode)
 	return CreateDirectoryW(utf16_path, NULL);
 }
 #define VNEEDS_MIGRATION (mkdirResult != 0)
-#elif defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__HAIKU__) || defined(__DragonFly__)
+#elif defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__HAIKU__)
 #include <sys/stat.h>
 #include <limits.h>
 #define VNEEDS_MIGRATION (mkdirResult == 0)
 /* These are needed for PLATFORM_* crap */
 #include <unistd.h>
 #include <dirent.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <spawn.h>
 #define MAX_PATH PATH_MAX
 #endif
 
@@ -78,7 +68,7 @@ int FILESYSTEM_init(char *argvZero, char* baseDir, char *assetsPath)
 	mkdirResult = mkdir(output, 0777);
 
 	/* Mount our base user directory */
-	PHYSFS_mount(output, NULL, 0);
+	PHYSFS_mount(output, NULL, 1);
 	PHYSFS_setWriteDir(output);
 	printf("Base directory: %s\n", output);
 
@@ -103,12 +93,9 @@ int FILESYSTEM_init(char *argvZero, char* baseDir, char *assetsPath)
 	}
 
 	/* Mount the stock content last */
-	if (assetsPath)
-	{
+	if (assetsPath) {
 		strcpy(output, assetsPath);
-	}
-	else
-	{
+	} else {
 		strcpy(output, PHYSFS_getBaseDir());
 		strcat(output, "data.zip");
 	}
@@ -136,6 +123,24 @@ int FILESYSTEM_init(char *argvZero, char* baseDir, char *assetsPath)
 	{
 		printf("gamecontrollerdb.txt not found!\n");
 	}
+
+	/* Mount portal_assets directory */
+	strcpy(output, PHYSFS_getBaseDir());
+	strcat(output, "portal_assets");
+	if (!PHYSFS_mount(output, NULL, 1))
+	{
+		puts("Could not mount portal_assets!");
+		return 0;
+	}
+
+	/*
+	char **rc = PHYSFS_enumerateFiles("");
+	char **i;
+	for (i = rc; *i != NULL; i++)
+	    printf(" * We've got [%s].\n", *i);
+	PHYSFS_freeList(rc);
+	*/
+
 	return 1;
 }
 
@@ -154,72 +159,9 @@ char *FILESYSTEM_getUserLevelDirectory()
 	return levelDir;
 }
 
-bool FILESYSTEM_directoryExists(const char *fname)
+void FILESYSTEM_loadFileToMemory(const char *name, unsigned char **mem,
+                                 size_t *len, bool addnull)
 {
-	return PHYSFS_exists(fname);
-}
-
-void FILESYSTEM_mount(const char *fname)
-{
-	std::string path(PHYSFS_getRealDir(fname));
-	path += PHYSFS_getDirSeparator();
-	path += fname;
-	if (!PHYSFS_mount(path.c_str(), NULL, 0))
-	{
-		printf("Error mounting: %s\n", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
-	}
-	else
-	{
-		graphics.assetdir = path.c_str();
-	}
-}
-
-void FILESYSTEM_unmountassets()
-{
-	if (graphics.assetdir != "")
-	{
-		printf("Unmounting %s\n", graphics.assetdir.c_str());
-		PHYSFS_unmount(graphics.assetdir.c_str());
-		graphics.assetdir = "";
-		graphics.reloadresources();
-	}
-	else
-	{
-		printf("Cannot unmount when no asset directory is mounted\n");
-	}
-}
-
-void FILESYSTEM_loadFileToMemory(
-	const char *name,
-	unsigned char **mem,
-	size_t *len,
-	bool addnull
-) {
-	if (strcmp(name, "levels/special/stdin.vvvvvv") == 0)
-	{
-		// this isn't *technically* necessary when piping directly from a file, but checking for that is annoying
-		static std::vector<char> STDIN_BUFFER;
-		static bool STDIN_LOADED = false;
-		if (!STDIN_LOADED)
-		{
-			std::istreambuf_iterator<char> begin(std::cin), end;
-			STDIN_BUFFER.assign(begin, end);
-			STDIN_BUFFER.push_back(0); // there's no observable change in behavior if addnull is always true, but not vice versa
-			STDIN_LOADED = true;
-		}
-
-		size_t length = STDIN_BUFFER.size() - 1;
-		if (len != NULL)
-		{
-			*len = length;
-		}
-
-		++length;
-		*mem = static_cast<unsigned char*>(malloc(length)); // STDIN_BUFFER.data() causes double-free
-		std::copy(STDIN_BUFFER.begin(), STDIN_BUFFER.end(), reinterpret_cast<char*>(*mem));
-		return;
-	}
-
 	PHYSFS_File *handle = PHYSFS_openRead(name);
 	if (handle == NULL)
 	{
@@ -239,11 +181,7 @@ void FILESYSTEM_loadFileToMemory(
 	{
 		*mem = (unsigned char*) malloc(length);
 	}
-	int success = PHYSFS_readBytes(handle, *mem, length);
-	if (success == -1)
-	{
-		FILESYSTEM_freeMemory(mem);
-	}
+	PHYSFS_readBytes(handle, *mem, length);
 	PHYSFS_close(handle);
 }
 
@@ -323,7 +261,7 @@ void PLATFORM_migrateSaveData(char* output)
 	char oldLocation[MAX_PATH];
 	char newLocation[MAX_PATH];
 	char oldDirectory[MAX_PATH];
-#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__HAIKU__) || defined(__DragonFly__)
+#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__HAIKU__)
 	DIR *dir = NULL;
 	struct dirent *de = NULL;
 	DIR *subDir = NULL;
@@ -336,11 +274,11 @@ void PLATFORM_migrateSaveData(char* output)
 		return;
 	}
 	strcpy(oldDirectory, homeDir);
- #if defined(__linux__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__HAIKU__) || defined(__DragonFly__)
+#if defined(__linux__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__HAIKU__)
 	strcat(oldDirectory, "/.vvvvvv/");
- #elif defined(__APPLE__)
+#elif defined(__APPLE__)
 	strcat(oldDirectory, "/Documents/VVVVVV/");
- #endif
+#endif
 	dir = opendir(oldDirectory);
 	if (!dir)
 	{
@@ -484,7 +422,7 @@ void PLATFORM_migrateSaveData(char* output)
 void PLATFORM_copyFile(const char *oldLocation, const char *newLocation)
 {
 	char *data;
-	size_t length, bytes_read, bytes_written;
+	long int length;
 
 	/* Read data */
 	FILE *file = fopen(oldLocation, "rb");
@@ -497,14 +435,8 @@ void PLATFORM_copyFile(const char *oldLocation, const char *newLocation)
 	length = ftell(file);
 	fseek(file, 0, SEEK_SET);
 	data = (char*) malloc(length);
-	bytes_read = fread(data, 1, length, file);
+	fread(data, 1, length, file);
 	fclose(file);
-	if (bytes_read != length)
-	{
-		printf("An error occurred when reading from %s\n", oldLocation);
-		free(data);
-		return;
-	}
 
 	/* Write data */
 	file = fopen(newLocation, "wb");
@@ -514,65 +446,10 @@ void PLATFORM_copyFile(const char *oldLocation, const char *newLocation)
 		free(data);
 		return;
 	}
-	bytes_written = fwrite(data, 1, length, file);
+	fwrite(data, 1, length, file);
 	fclose(file);
 	free(data);
 
 	/* WTF did we just do */
 	printf("Copied:\n\tOld: %s\n\tNew: %s\n", oldLocation, newLocation);
-	if (bytes_written != length)
-	{
-		printf("Warning: an error occurred when writing to %s\n", newLocation);
-	}
-}
-
-bool FILESYSTEM_openDirectoryEnabled()
-{
-	/* This is just a check to see if we're on a desktop or tenfoot setup.
-	 * If you're working on a tenfoot-only build, add a def that always
-	 * returns false!
-	 */
-	return !SDL_GetHintBoolean("SteamTenfoot", SDL_FALSE);
-}
-
-#ifdef _WIN32
-bool FILESYSTEM_openDirectory(const char *dname)
-{
-	ShellExecute(NULL, "open", dname, NULL, NULL, SW_SHOWMINIMIZED);
-	return true;
-}
-#elif defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__HAIKU__) || defined(__DragonFly__)
- #if defined(__APPLE__) || defined(__HAIKU__)
-const char* open_cmd = "open";
- #else
-const char* open_cmd = "xdg-open";
- #endif
-
-extern "C" char** environ;
-
-bool FILESYSTEM_openDirectory(const char *dname)
-{
-	pid_t child;
-	// This const_cast is legal (ctrl-f "The statement" at https://pubs.opengroup.org/onlinepubs/9699919799/functions/exec.html
-	char* argv[3] =
-	{
-		const_cast<char*>(open_cmd),
-		const_cast<char*>(dname),
-		NULL
-	};
-	posix_spawnp(&child, open_cmd, NULL, NULL, argv, environ);
-	int status = 0;
-	waitpid(child, &status, 0);
-	return WIFEXITED(status) && WEXITSTATUS(status) == 0;
-}
-#else
-bool FILESYSTEM_openDirectory(const char *dname)
-{
-	return false;
-}
-#endif
-
-bool FILESYSTEM_delete(const char *name)
-{
-	return PHYSFS_delete(name) != 0;
 }

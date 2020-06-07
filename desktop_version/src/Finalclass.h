@@ -10,7 +10,7 @@
 class finalclass
 {
 public:
-    std::vector<int> loadlevel(int rx, int ry);
+    std::vector<std::string> loadlevel(int rx, int ry, Game& game, entityclass& obj);
 
     std::string roomname;
     int coin, rcol;

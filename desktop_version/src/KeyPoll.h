@@ -6,6 +6,7 @@
 #include <map> // FIXME: I should feel very bad for using C++ -flibit
 
 #include "SDL.h"
+#include <stdio.h>
 
 enum Kybrd
 {
@@ -21,12 +22,13 @@ enum Kybrd
 	KEYBOARD_a = SDLK_a,
 	KEYBOARD_d = SDLK_d,
 	KEYBOARD_m = SDLK_m,
-	KEYBOARD_n = SDLK_n,
 
 	KEYBOARD_v = SDLK_v,
 	KEYBOARD_z = SDLK_z,
 
-	KEYBOARD_BACKSPACE = SDLK_BACKSPACE
+	KEYBOARD_BACKSPACE = SDLK_BACKSPACE,
+	
+	KEYBOARD_q = SDLK_q,
 };
 
 class KeyPoll
@@ -65,6 +67,8 @@ public:
 	bool controllerWantsRight(bool includeVert);
 
 	int leftbutton, rightbutton, middlebutton;
+	bool leftbutton_rising_edge;
+	bool rightbutton_rising_edge;
 	int mx, my;
 
 	bool textentrymode;

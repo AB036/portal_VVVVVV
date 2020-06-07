@@ -37,6 +37,8 @@ KeyPoll::KeyPoll()
 	keybuffer="";
 	leftbutton=0; rightbutton=0; middlebutton=0;
 	mx=0; my=0;
+	leftbutton_rising_edge = false;
+	rightbutton_rising_edge = false;
 	resetWindow = 0;
 	toggleFullscreen = false;
 	pressedbackspace=false;
@@ -77,21 +79,18 @@ void KeyPoll::Poll()
 		if (evt.type == SDL_KEYDOWN)
 		{
 			keymap[evt.key.keysym.sym] = true;
-
 			if (evt.key.keysym.sym == SDLK_BACKSPACE)
 			{
 				pressedbackspace = true;
 			}
-
-#ifdef __APPLE__ /* OSX prefers the command keys over the alt keys. -flibit */
-			bool altpressed = keymap[SDLK_LGUI] || keymap[SDLK_RGUI];
+			else if (	(	evt.key.keysym.sym == SDLK_RETURN ||
+						evt.key.keysym.sym == SDLK_f	) &&
+#ifdef __APPLE__ /* OSX prefers the command key over the alt keys. -flibit */
+					keymap[SDLK_LGUI]	)
 #else
-			bool altpressed = keymap[SDLK_LALT] || keymap[SDLK_RALT];
+					(	keymap[SDLK_LALT] ||
+						keymap[SDLK_RALT]	)	)
 #endif
-			bool returnpressed = evt.key.keysym.sym == SDLK_RETURN;
-			bool fpressed = evt.key.keysym.sym == SDLK_f;
-			bool f11pressed = evt.key.keysym.sym == SDLK_F11;
-			if ((altpressed && (returnpressed || fpressed)) || f11pressed)
 			{
 				toggleFullscreen = true;
 			}
@@ -140,12 +139,16 @@ void KeyPoll::Poll()
 			{
 				mx = evt.button.x;
 				my = evt.button.y;
+                if (leftbutton == 0)
+                	leftbutton_rising_edge = true;
 				leftbutton = 1;
 			}
 			else if (evt.button.button == SDL_BUTTON_RIGHT)
 			{
 				mx = evt.button.x;
 				my = evt.button.y;
+				if (rightbutton == 0)
+                	rightbutton_rising_edge = true;
 				rightbutton = 1;
 			}
 			else if (evt.button.button == SDL_BUTTON_MIDDLE)
@@ -251,7 +254,6 @@ void KeyPoll::Poll()
 					SDL_SetWindowFullscreen(window, 0);
 				}
 				SDL_DisableScreenSaver();
-				resetWindow = true;
 			}
 			else if (evt.window.event == SDL_WINDOWEVENT_FOCUS_LOST)
 			{
@@ -264,19 +266,16 @@ void KeyPoll::Poll()
 					);
 				}
 				SDL_EnableScreenSaver();
-				resetWindow = true;
 			}
 
 			/* Mouse Focus */
 			else if (evt.window.event == SDL_WINDOWEVENT_ENTER)
 			{
 				SDL_DisableScreenSaver();
-				resetWindow = true;
 			}
 			else if (evt.window.event == SDL_WINDOWEVENT_LEAVE)
 			{
 				SDL_EnableScreenSaver();
-				resetWindow = true;
 			}
 		}
 

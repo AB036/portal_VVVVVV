@@ -19,6 +19,8 @@
 #include "GraphicsUtil.h"
 #include "Screen.h"
 
+class map;
+
 class Graphics
 {
 public:
@@ -27,14 +29,14 @@ public:
 
 	GraphicsResources grphx;
 
-	int bfontlen(uint32_t ch);
-	int font_idx(uint32_t ch);
+	int bfontlen(char32_t ch);
+	int font_idx(char32_t ch);
 
 	void Makebfont();
 
 	void drawhuetile(int x, int y, int t, int c);
 
-	void drawgravityline(int t);
+	void drawgravityline(int t, entityclass& obj);
 
 	void MakeTileArray();
 
@@ -44,8 +46,8 @@ public:
 
 	void drawcoloredtile(int x, int y, int t, int r, int g, int b);
 
-	void drawmenu(int cr, int cg, int cb, int division = 30);
-	void drawlevelmenu(int cr, int cg, int cb, int division = 30);
+	void drawmenu(Game& game, int cr, int cg, int cb, int division = 30);
+	void drawlevelmenu(Game& game, int cr, int cg, int cb, int division = 30);
 
 	void processfade();
 
@@ -86,7 +88,7 @@ public:
 	void drawpixeltextbox(int x, int y, int w, int h, int w2, int h2, int r, int g, int b, int xo, int yo);
 	void drawcustompixeltextbox(int x, int y, int w, int h, int w2, int h2, int r, int g, int b, int xo, int yo);
 
-	void drawcrewman(int x, int y, int t, bool act, bool noshift =false);
+	void drawcrewman(int x, int y, int t, bool act, UtilityClass& help, bool noshift =false);
 
 	int crewcolour(const int t);
 
@@ -98,9 +100,11 @@ public:
 
 	void drawimagecol(int t, int xp, int yp, int r, int g, int b, bool cent= false);
 
-	void drawgui();
+	void drawgui(UtilityClass& help);
 
 	void drawsprite(int x, int y, int t, int r, int g, int b);
+
+	void drawpixel(int x, int y, int r, int g, int b);
 
 	void printcrewname(int x, int y, int t);
 
@@ -110,41 +114,32 @@ public:
 
 	void Print(int _x, int _y, std::string _s, int r, int g, int b, bool cen = false);
 
-	void PrintAlpha(int _x, int _y, std::string _s, int r, int g, int b, int a, bool cen = false);
-
 	void RPrint(int _x, int _y, std::string _s, int r, int g, int b, bool cen = false);
 
 	void PrintOff(int _x, int _y, std::string _s, int r, int g, int b, bool cen = false);
 
-	void PrintOffAlpha(int _x, int _y, std::string _s, int r, int g, int b, int a, bool cen = false);
-
 	void bprint(int x, int y, std::string t, int r, int g, int b, bool cen = false);
-
-	void bprintalpha(int x, int y, std::string t, int r, int g, int b, int a, bool cen = false);
 
 	int len(std::string t);
 	void bigprint( int _x, int _y, std::string _s, int r, int g, int b, bool cen = false, int sc = 2 );
-	void drawspritesetcol(int x, int y, int t, int c);
+	void drawspritesetcol(int x, int y, int t, int c, UtilityClass& help);
 
 
 	void flashlight();
 	void screenshake();
 
 	void render();
-	void renderwithscreeneffects();
 
-	bool Hitest(SDL_Surface* surface1, point p1, SDL_Surface* surface2, point p2);
+	bool Hitest(SDL_Surface* surface1, point p1, int col, SDL_Surface* surface2, point p2, int col2);
 
-	void drawentities();
+	void drawentities(mapclass& map, entityclass& obj, UtilityClass& help);
 
-	void drawtrophytext();
+	void drawtrophytext(entityclass&, UtilityClass& help);
 
 	void bigrprint(int x, int y, std::string& t, int r, int g, int b, bool cen = false, float sc = 2);
 
 
-	void drawtele(int x, int y, int t, int c);
-
-	Uint32 getRGBA(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+	void drawtele(int x, int y, int t, int c, UtilityClass& help);
 
 	Uint32 getRGB(Uint8 r, Uint8 g, Uint8 b);
 
@@ -159,15 +154,17 @@ public:
 
 	void setcolreal(Uint32 t);
 
-	void drawbackground(int t);
+	void drawbackground(int t, mapclass& map);
 	void drawtile3( int x, int y, int t, int off );
 	void drawentcolours( int x, int y, int t);
-	void drawtile2( int x, int y, int t );
-	void drawtile( int x, int y, int t );
+	void drawtile2( int x, int y, int t, int r, int g, int b );
+	void drawtile( int x, int y, int t, int r, int g, int b );
 	void drawtowertile( int x, int y, int t );
 	void drawtowertile3( int x, int y, int t, int off );
 
-	void drawmap();
+	void drawtile(int x, int y, int t);
+
+	void drawmap(mapclass& map);
 
 	void drawforetile(int x, int y, int t);
 
@@ -177,26 +174,29 @@ public:
 
 	void drawrect(int x, int y, int w, int h, int r, int g, int b);
 
-	void drawtowermap();
+	void drawtowermap(mapclass& map);
 
-	void drawtowermap_nobackground();
+	void drawtowermap_nobackground(mapclass& map);
 
-	void drawtowerspikes();
+	void drawtowerspikes(mapclass& map);
+
+	void drawtowerentities(mapclass& map, entityclass& obj, UtilityClass& help);
 
 	bool onscreen(int t);
-	
-	void reloadresources();
-	std::string assetdir;
+
+	void drawtowerbackgroundsolo(mapclass& map);
 
 
 	void menuoffrender();
 
-	void drawtowerbackground();
+	void drawtowerbackground(mapclass& map);
 
-	void setcol(int t);
-	void drawfinalmap();
+	void setcol(int t, UtilityClass& help);
+	void drawfinalmap(mapclass & map);
 
 	colourTransform ct;
+
+	std::string tempstring;
 
 	int bcol, bcol2, rcol;
 
@@ -213,6 +213,7 @@ public:
 	std::vector <SDL_Surface*> tiles3;
 	std::vector <SDL_Surface*> entcolours;
 	std::vector <SDL_Surface*> sprites;
+	std::vector <SDL_Surface*> portal_sprites;
 	std::vector <SDL_Surface*> flipsprites;
 	std::vector <SDL_Surface*> bfont;
 	std::vector <SDL_Surface*> bfontmask;
@@ -234,6 +235,7 @@ public:
 	SDL_Rect bfont_rect;
 	SDL_Rect tiles_rect;
 	SDL_Rect sprites_rect;
+	SDL_Rect portals_rect;
 	SDL_Rect bfontmask_rect;
 	SDL_Rect images_rect;
 	SDL_Rect bg_rect;
@@ -265,6 +267,7 @@ public:
 	int trinketr, trinketg, trinketb;
 
 	std::vector <textboxclass> textbox;
+	int ntextbox;
 
 	bool showcutscenebars;
 	int cutscenebarspos;
@@ -286,6 +289,17 @@ public:
 	bool showmousecursor;
 
 	std::map<int, int> font_positions;
+
+	int blue_fire_line_step;
+	int blue_x_source;
+	int blue_y_source;
+	int blue_x_aim;
+	int blue_y_aim;
+	int orange_fire_line_step;
+	int orange_x_source;
+	int orange_y_source;
+	int orange_x_aim;
+	int orange_y_aim;
 };
 
 extern Graphics graphics;

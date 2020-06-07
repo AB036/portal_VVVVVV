@@ -8,14 +8,16 @@
 #include "Music.h"
 #include "Map.h"
 
-void titlelogic();
+void titlelogic(Graphics& dwgfx, Game& game, entityclass& obj, UtilityClass& help, musicclass& music, mapclass& map);
 
-void maplogic();
+void maplogic(Graphics& dwgfx, Game& game, entityclass& obj,  musicclass& music, mapclass& map, UtilityClass& help);
 
-void gamecompletelogic();
+void gamecompletelogic(Graphics& dwgfx, Game& game, entityclass& obj,  musicclass& music, mapclass& map, UtilityClass& help);
 
-void gamecompletelogic2();
+void gamecompletelogic2(Graphics& dwgfx, Game& game, entityclass& obj,  musicclass& music, mapclass& map, UtilityClass& help);
 
-void gamelogic();
+void towerlogic(Graphics& dwgfx, Game& game, entityclass& obj,  musicclass& music, mapclass& map, UtilityClass& help);
+
+void gamelogic(Graphics& dwgfx, Game& game, entityclass& obj,  musicclass& music, mapclass& map, UtilityClass& help);
 
 #endif /* LOGIC_H */

@@ -31,6 +31,7 @@ public:
     SDL_Surface* im_image10;
     SDL_Surface* im_image11;
     SDL_Surface* im_image12;
+    SDL_Surface* im_portals;
 };
 
 #endif /* GRAPHICSRESOURCES_H */

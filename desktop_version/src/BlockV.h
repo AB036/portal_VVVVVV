@@ -9,11 +9,12 @@ class blockclass
 public:
     blockclass();
 
-    void rectset(const int xi, const int yi, const int wi, const int hi);
+    void clear();
 
-    void setblockcolour(std::string col);
+    void rectset(const int xi, const int yi, const int wi, const int hi);
 public:
     //Fundamentals
+    bool active;
     SDL_Rect rect;
     int type;
     int trigger;

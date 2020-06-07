@@ -13,6 +13,8 @@
 #include "Music.h"
 #include "editor.h"
 
+extern editorclass ed;
+
 class mapclass
 {
 public:
@@ -22,9 +24,9 @@ public:
 
     int intpol(int a, int b, float c);
 
-    void setteleporter(int x, int y);
+    void setteleporter(int t, int x, int y);
 
-    void settrinket(int x, int y);
+    void settrinket(int t, int x, int y);
 
     void resetmap();
 
@@ -40,7 +42,7 @@ public:
 
     int maptiletoenemycol(int t);
 
-    void changefinalcol(int t);
+    void changefinalcol(int t, entityclass& obj, Game& game);
 
     void setcol(const int r1, const int g1, const int b1 , const int r2, const  int g2, const int b2, const int c);
 
@@ -54,7 +56,11 @@ public:
 
     bool collide(int x, int y);
 
+    void fillareamap(std::vector<std::string>& tmap);
+
     void settile(int xp, int yp, int t);
+
+    void fillcontent(std::vector<std::string>& tmap);
 
 
     int area(int _rx, int _ry);
@@ -65,15 +71,17 @@ public:
 
     void showship();
 
-    void resetplayer();
+    void resetplayer(Graphics& dwgfx, Game& game, entityclass& obj, musicclass& music);
 
-    void warpto(int rx, int ry , int t, int tx, int ty);
+    void warpto(int rx, int ry , int t, int tx, int ty,  Graphics& dwgfx, Game& game, entityclass& obj, musicclass& music);
 
-    void gotoroom(int rx, int ry);
+    void gotoroom(int rx, int ry, Graphics& dwgfx,  Game& game, entityclass& obj, musicclass& music);
 
     std::string currentarea(int t);
 
-    void loadlevel(int rx, int ry);
+    void loadlevel(int rx, int ry, Graphics& dwgfx, Game& game, entityclass& obj, musicclass& music);
+
+    bool portal_free(int x, int y, char orientation);
 
 
     std::vector <int> roomdeaths;
@@ -126,6 +134,8 @@ public:
     bool custommodeforreal;
     int customx, customy;
     int customwidth, customheight;
+    int customtrinkets;
+    int customcrewmates;
     int custommmxoff, custommmyoff, custommmxsize, custommmysize;
     int customzoom;
     bool customshowmm;
@@ -146,11 +156,14 @@ public:
     std::vector<point> teleporters;
     std::vector<point> shinytrinkets;
 
+    int numteleporters, numshinytrinkets;
     bool showteleporters, showtargets, showtrinkets;
 
     //Roomtext
+    int roomtextx[100], roomtexty[100];
     bool roomtexton;
-    std::vector<Roomtext> roomtext;
+    std::vector<std::string> roomtext;
+    int roomtextnumlines;
 
     //Levels
     otherlevelclass otherlevel;

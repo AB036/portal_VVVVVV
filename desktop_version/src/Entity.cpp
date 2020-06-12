@@ -5721,10 +5721,10 @@ void entityclass::entitycollisioncheck( Graphics& dwgfx, Game& game, mapclass& m
 void entityclass::line_collision_bounds(int xa, int ya, int xb, int yb, int* xmin, int* ymin, int* xmax, int* ymax)
 {
     // check objects colliding the line AB and find the bounds
-    *xmin = 0;
-    *xmax = 320;
-    *ymin = 0;
-    *ymax = 240;
+    *xmin = -1;
+    *xmax = 321;
+    *ymin = -1;
+    *ymax = 241;
     for (int i = 0; i < nentity; i++)
     {
         int x1 = 0; // bounding box corners for the entity

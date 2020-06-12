@@ -1614,6 +1614,12 @@ void gamerender(Graphics& dwgfx, mapclass& map, Game& game, entityclass& obj, Ut
 
             while (!map.collide(x0/8, y0/8))
             {
+                if (x0 == 0 && map.warpx) x0 = 319;
+                else if (x0 == 319 && map.warpx) x0 = 0;
+
+                if (y0 == 0 && map.warpy) y0 = 239;
+                else if (y0 == 239 && map.warpy) y0 = 0;
+
                 if (!(xmin <= x0 && x0 < xmax && ymin <= y0 && y0 < ymax))
                 {
                     if (dwgfx.blue_fire_line_step == 2)
@@ -1761,12 +1767,19 @@ void gamerender(Graphics& dwgfx, mapclass& map, Game& game, entityclass& obj, Ut
 
             while (!map.collide(x0/8, y0/8))
             {
+                if (x0 == 0 && map.warpx) x0 = 319;
+                else if (x0 == 319 && map.warpx) x0 = 0;
+
+                if (y0 == 0 && map.warpy) y0 = 239;
+                else if (y0 == 239 && map.warpy) y0 = 0;
+
                 if (!(xmin <= x0 && x0 < xmax && ymin <= y0 && y0 < ymax))
                 {
                     if (dwgfx.orange_fire_line_step == 2)
                         music.playef(6,10);;
                     break;
                 }
+                
                 if ((pixel_count + dwgfx.orange_fire_line_step) % 5 == 0)
                     dwgfx.drawpixel(x0, y0, 200, 150, 120);
                 if ((pixel_count + dwgfx.orange_fire_line_step) % 12 == 0)
@@ -3180,28 +3193,25 @@ void towerrender(Graphics& dwgfx, Game& game, mapclass& map, entityclass& obj, U
         int e2 = 2*err;
         int pixel_count = 0;
 
+        int xmin;
+        int xmax;
+        int ymin;
+        int ymax;
+
+        obj.line_collision_bounds(x0, y0, dwgfx.blue_x_aim, dwgfx.blue_y_aim, &xmin, &ymin, &xmax, &ymax);
+
         while (!map.collide(x0/8, y0/8))
         {
-            if (!(0 <= x0 && x0 < 320))  // fireline is out the screen from left or right
-            {
-                if (map.ypos>=500 && map.ypos <=5000)  // wrap everywhere except top and bottom of tower
-                {
-                    if (x0 < 0) x0 += 320;
-                    if (x0 >= 320) x0 -= 320;
-                }
-                else
-                {
-                    if (dwgfx.blue_fire_line_step == 2)
-                        music.playef(6,10);
-                    break;
-                }
-            }
-            if (!(0 <= y0 - (int) map.ypos && y0 - (int) map.ypos < 240))  // fireline is out the screen from top or bottom
+            if (x0 == 0 && map.ypos>=500 && map.ypos <=5000) x0 = 319;
+            else if (x0 == 319 && map.ypos>=500 && map.ypos <=5000) x0 = 0;
+
+            if (!(xmin <= x0 && x0 < xmax && ymin <= y0 - (int) map.ypos && y0 - (int) map.ypos < ymax))
             {
                 if (dwgfx.blue_fire_line_step == 2)
-                    music.playef(6,10);
+                    music.playef(6,10);;
                 break;
             }
+
             if ((pixel_count + dwgfx.blue_fire_line_step) % 5 == 0)
                 dwgfx.drawpixel(x0, y0 - map.ypos, 120, 120, 240);
             if ((pixel_count + dwgfx.blue_fire_line_step) % 12 == 0)
@@ -3334,28 +3344,25 @@ void towerrender(Graphics& dwgfx, Game& game, mapclass& map, entityclass& obj, U
         int e2 = 2*err;
         int pixel_count = 0;
 
+        int xmin;
+        int xmax;
+        int ymin;
+        int ymax;
+
+        obj.line_collision_bounds(x0, y0, dwgfx.blue_x_aim, dwgfx.blue_y_aim, &xmin, &ymin, &xmax, &ymax);
+
         while (!map.collide(x0/8, y0/8))
         {
-            if (!(0 <= x0 && x0 < 320))  // fireline is out the screen from left or right
-            {
-                if (map.ypos>=500 && map.ypos <=5000)  // wrap everywhere except top and bottom of tower
-                {
-                    if (x0 < 0) x0 += 320;
-                    if (x0 >= 320) x0 -= 320;
-                }
-                else
-                {
-                    if (dwgfx.blue_fire_line_step == 2)
-                        music.playef(6,10);
-                    break;
-                }
-            }
-            if (!(0 <= y0 - (int) map.ypos && y0 - (int) map.ypos < 240))  // fireline is out the screen from top or bottom
+            if (x0 == 0 && map.ypos>=500 && map.ypos <=5000) x0 = 319;
+            else if (x0 == 319 && map.ypos>=500 && map.ypos <=5000) x0 = 0;
+
+            if (!(xmin <= x0 && x0 < xmax && ymin <= y0 - (int) map.ypos && y0 - (int) map.ypos < ymax))
             {
                 if (dwgfx.blue_fire_line_step == 2)
-                    music.playef(6,10);
+                    music.playef(6,10);;
                 break;
             }
+            
             if ((pixel_count + dwgfx.orange_fire_line_step) % 5 == 0)
                 dwgfx.drawpixel(x0, y0 - map.ypos, 200, 150, 120);
             if ((pixel_count + dwgfx.orange_fire_line_step) % 12 == 0)

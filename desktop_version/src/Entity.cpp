@@ -5385,6 +5385,8 @@ void teleport_to_portal(char entry_orientation, char exit_orientation, entclass&
             u = player.yp - entry_portal.yp;
             break;
     }
+    u = std::min(u, 6);
+    u = std::max(-6, u);
 
     int x = exit_portal.xp;
     int y = exit_portal.yp;

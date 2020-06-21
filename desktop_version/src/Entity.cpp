@@ -5724,17 +5724,17 @@ void entityclass::line_collision_bounds(int xa, int ya, int xb, int yb, int* xmi
 {
     // check objects colliding the line AB and find the bounds
     *xmin = -1;
-    *xmax = 321;
+    *xmax = 320;
     *ymin = -1;
-    *ymax = 241;
+    *ymax = 240;
     for (int i = 0; i < nentity; i++)
     {
-        int x1 = 0; // bounding box corners for the entity
-        int x2 = 0;
-        int y1 = 0;
-        int y2 = 0;
         if (entities[i].active && !entities[i].invis)
         {
+            int x1 = 0; // bounding box corners for the entity
+            int x2 = 0;
+            int y1 = 0;
+            int y2 = 0;
             if ((entities[i].type == 1 && entities[i].rule == 2) // moving platform 
              || (entities[i].type == 2 && entities[i].rule == 3) // disappearing platform
              || (entities[i].type == 3 && entities[i].rule == 6)) // breakable blocks

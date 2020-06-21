@@ -1614,28 +1614,31 @@ void gamerender(Graphics& dwgfx, mapclass& map, Game& game, entityclass& obj, Ut
 
             while (!map.collide(x0/8, y0/8))
             {
-                if (x0 == 0 && map.warpx) x0 = 319;
-                else if (x0 == 319 && map.warpx) x0 = 0;
+                if (x0 == 0 && map.warpx) x0 = 318;
+                else if (x0 == 319 && map.warpx) x0 = 1;
 
-                if (y0 == 0 && map.warpy) y0 = 239;
-                else if (y0 == 239 && map.warpy) y0 = 0;
+                if (y0 == 0 && map.warpy) y0 = 238;
+                else if (y0 == 239 && map.warpy) y0 = 1;
 
                 if (!(xmin <= x0 && x0 < xmax && ymin <= y0 && y0 < ymax))
                 {
                     if (dwgfx.blue_fire_line_step == 2)
-                        music.playef(6,10);;
+                        music.playef(6,10);
                     break;
                 }
-                if ((pixel_count + dwgfx.blue_fire_line_step) % 5 == 0)
-                    dwgfx.drawpixel(x0, y0, 120, 120, 240);
-                if ((pixel_count + dwgfx.blue_fire_line_step) % 12 == 0)
-                    dwgfx.drawpixel(x0+1, y0-1, 64, 64, 184);
-                if ((pixel_count + dwgfx.blue_fire_line_step) % 13 == 0)
-                    dwgfx.drawpixel(x0-1, y0+1, 64, 64, 184);
-                if ((pixel_count + dwgfx.blue_fire_line_step) % 11 == 0)
-                    dwgfx.drawpixel(x0+1, y0+1, 64, 64, 184);
-                if ((pixel_count + dwgfx.blue_fire_line_step) % 14 == 0)
-                    dwgfx.drawpixel(x0-1, y0-1, 64, 64, 184);
+                if (1 <= x0 && x0 <= 318 && 1 <= y0 && y0 <= 238)
+                {
+                    if ((pixel_count + dwgfx.blue_fire_line_step) % 5 == 0)
+                        dwgfx.drawpixel(x0, y0, 120, 120, 240);
+                    if ((pixel_count + dwgfx.blue_fire_line_step) % 12 == 0)
+                        dwgfx.drawpixel(x0+1, y0-1, 64, 64, 184);
+                    if ((pixel_count + dwgfx.blue_fire_line_step) % 13 == 0)
+                        dwgfx.drawpixel(x0-1, y0+1, 64, 64, 184);
+                    if ((pixel_count + dwgfx.blue_fire_line_step) % 11 == 0)
+                        dwgfx.drawpixel(x0+1, y0+1, 64, 64, 184);
+                    if ((pixel_count + dwgfx.blue_fire_line_step) % 14 == 0)
+                        dwgfx.drawpixel(x0-1, y0-1, 64, 64, 184);
+                }
                 e2 = 2*err;
                 if (e2 >= dy)
                 {
@@ -1767,29 +1770,32 @@ void gamerender(Graphics& dwgfx, mapclass& map, Game& game, entityclass& obj, Ut
 
             while (!map.collide(x0/8, y0/8))
             {
-                if (x0 == 0 && map.warpx) x0 = 319;
-                else if (x0 == 319 && map.warpx) x0 = 0;
+                if (x0 == 0 && map.warpx) x0 = 318;
+                else if (x0 == 319 && map.warpx) x0 = 1;
 
-                if (y0 == 0 && map.warpy) y0 = 239;
-                else if (y0 == 239 && map.warpy) y0 = 0;
+                if (y0 == 0 && map.warpy) y0 = 238;
+                else if (y0 == 239 && map.warpy) y0 = 1;
 
                 if (!(xmin <= x0 && x0 < xmax && ymin <= y0 && y0 < ymax))
                 {
                     if (dwgfx.orange_fire_line_step == 2)
-                        music.playef(6,10);;
+                        music.playef(6,10);
                     break;
                 }
-                
-                if ((pixel_count + dwgfx.orange_fire_line_step) % 5 == 0)
-                    dwgfx.drawpixel(x0, y0, 200, 150, 120);
-                if ((pixel_count + dwgfx.orange_fire_line_step) % 12 == 0)
-                    dwgfx.drawpixel(x0+1, y0-1, 144, 94, 64);
-                if ((pixel_count + dwgfx.orange_fire_line_step) % 13 == 0)
-                    dwgfx.drawpixel(x0-1, y0+1, 144, 94, 64);
-                if ((pixel_count + dwgfx.orange_fire_line_step) % 11 == 0)
-                    dwgfx.drawpixel(x0+1, y0+1, 144, 94, 64);
-                if ((pixel_count + dwgfx.orange_fire_line_step) % 14 == 0)
-                    dwgfx.drawpixel(x0-1, y0-1, 144, 94, 64);
+
+                if (1 <= x0 && x0 <= 318 && 1 <= y0 && y0 <= 238)
+                {
+                    if ((pixel_count + dwgfx.orange_fire_line_step) % 5 == 0)
+                        dwgfx.drawpixel(x0, y0, 200, 150, 120);
+                    if ((pixel_count + dwgfx.orange_fire_line_step) % 12 == 0)
+                        dwgfx.drawpixel(x0+1, y0-1, 144, 94, 64);
+                    if ((pixel_count + dwgfx.orange_fire_line_step) % 13 == 0)
+                        dwgfx.drawpixel(x0-1, y0+1, 144, 94, 64);
+                    if ((pixel_count + dwgfx.orange_fire_line_step) % 11 == 0)
+                        dwgfx.drawpixel(x0+1, y0+1, 144, 94, 64);
+                    if ((pixel_count + dwgfx.orange_fire_line_step) % 14 == 0)
+                        dwgfx.drawpixel(x0-1, y0-1, 144, 94, 64);
+                }
                 e2 = 2*err;
                 if (e2 >= dy)
                 {
@@ -3202,8 +3208,8 @@ void towerrender(Graphics& dwgfx, Game& game, mapclass& map, entityclass& obj, U
 
         while (!map.collide(x0/8, y0/8))
         {
-            if (x0 == 0 && map.ypos>=500 && map.ypos <=5000) x0 = 319;
-            else if (x0 == 319 && map.ypos>=500 && map.ypos <=5000) x0 = 0;
+            if (x0 == 0 && map.ypos>=500 && map.ypos <=5000) x0 = 318;
+            else if (x0 == 319 && map.ypos>=500 && map.ypos <=5000) x0 = 1;
 
             if (!(xmin <= x0 && x0 < xmax && ymin <= y0 - (int) map.ypos && y0 - (int) map.ypos < ymax))
             {

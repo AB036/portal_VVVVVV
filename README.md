@@ -27,9 +27,9 @@ The building process is exactly the same as in the original game. If you can bui
 
 On Linux, it might be:
 
-  - Libraries required: libsdl2 and libsdl-mixer
+  - Libraries required: libsdl2 and libsdl2-mixer
     - Use the ones with the headers, on Debian it's `sudo apt install libsdl2-dev libsdl2-mixer-dev`
-    - Warning: you need libsdl2 >= 2.0.5. If your package manager can't give you that, I think the easiest is to compile libsdl2 and libsdl2-mixer yourself. Make sure that ogg and wav support is enabled.
+    - Warning: you need libsdl2 >= 2.0.5. If your package manager can't give you that, the easiest is to compile libsdl2 and libsdl2-mixer yourself. Make sure that ogg and wav support is enabled.
   - Go to `desktop_version` and use Cmake:
 
 ```bash

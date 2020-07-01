@@ -1620,7 +1620,7 @@ void gamerender(Graphics& dwgfx, mapclass& map, Game& game, entityclass& obj, Ut
                 if (y0 == 0 && map.warpy) y0 = 238;
                 else if (y0 == 239 && map.warpy) y0 = 1;
 
-                if (!(xmin <= x0 && x0 < xmax && ymin <= y0 && y0 < ymax))
+                if (!(xmin <= x0 && x0 < xmax && ymin <= y0 && y0 < ymax) || (pixel_count >= 2000))
                 {
                     if (dwgfx.blue_fire_line_step == 2)
                         music.playef(6,10);
@@ -1776,7 +1776,7 @@ void gamerender(Graphics& dwgfx, mapclass& map, Game& game, entityclass& obj, Ut
                 if (y0 == 0 && map.warpy) y0 = 238;
                 else if (y0 == 239 && map.warpy) y0 = 1;
 
-                if (!(xmin <= x0 && x0 < xmax && ymin <= y0 && y0 < ymax))
+                if (!(xmin <= x0 && x0 < xmax && ymin <= y0 && y0 < ymax) || (pixel_count >= 2000))
                 {
                     if (dwgfx.orange_fire_line_step == 2)
                         music.playef(6,10);
@@ -3211,7 +3211,7 @@ void towerrender(Graphics& dwgfx, Game& game, mapclass& map, entityclass& obj, U
             if (x0 == 0 && map.ypos>=500 && map.ypos <=5000) x0 = 318;
             else if (x0 == 319 && map.ypos>=500 && map.ypos <=5000) x0 = 1;
 
-            if (!(xmin <= x0 && x0 < xmax && ymin <= y0 - (int) map.ypos && y0 - (int) map.ypos < ymax))
+            if (!(xmin <= x0 && x0 < xmax && ymin <= y0 - (int) map.ypos && y0 - (int) map.ypos < ymax) || (pixel_count >= 2000))
             {
                 if (dwgfx.blue_fire_line_step == 2)
                     music.playef(6,10);;
@@ -3362,7 +3362,7 @@ void towerrender(Graphics& dwgfx, Game& game, mapclass& map, entityclass& obj, U
             if (x0 == 0 && map.ypos>=500 && map.ypos <=5000) x0 = 319;
             else if (x0 == 319 && map.ypos>=500 && map.ypos <=5000) x0 = 0;
 
-            if (!(xmin <= x0 && x0 < xmax && ymin <= y0 - (int) map.ypos && y0 - (int) map.ypos < ymax))
+            if (!(xmin <= x0 && x0 < xmax && ymin <= y0 - (int) map.ypos && y0 - (int) map.ypos < ymax) || (pixel_count >= 2000))
             {
                 if (dwgfx.blue_fire_line_step == 2)
                     music.playef(6,10);;

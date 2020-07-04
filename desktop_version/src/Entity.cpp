@@ -5437,7 +5437,7 @@ void entityclass::entitycollisioncheck( Graphics& dwgfx, Game& game, mapclass& m
             {
                 if (entities[j].active && i!=j)  //Active
                 {
-                    if ((entities[i].rule == 0 || entities[i].type == 14) && j == blue_portal_index) // player or SCM vs blue portal
+                    if ((entities[i].rule == 0 || entities[i].type == 14 || entities[i].type == 12) && j == blue_portal_index) // player or SCM vs blue portal
                     {
                         if (portal_collide(blue_portal_orientation, entities[i], entities[j]) && orange_portal_index >= 0)
                         {
@@ -5452,7 +5452,7 @@ void entityclass::entitycollisioncheck( Graphics& dwgfx, Game& game, mapclass& m
                             }
                         }
                     }
-                    if ((entities[i].rule == 0 || entities[i].type == 14) && j == orange_portal_index) // player or SCM vs orange portal
+                    if ((entities[i].rule == 0 || entities[i].type == 14 || entities[i].type == 12) && j == orange_portal_index) // player or SCM vs orange portal
                     {
                         if (portal_collide(orange_portal_orientation, entities[i], entities[j]) && blue_portal_index >= 0)
                         {

@@ -5187,6 +5187,8 @@ void entityclass::movingplatformfix( int t, mapclass& map )
         if (entitycollide(t, j))
         {
             entities[j].yp = entities[j].yp - int(entities[j].vy);
+            if(game.gravitycontrol==0) entities[j].yp -= 1;
+            else entities[j].yp += 1;
             entities[j].vy = entities[t].vy;
             entities[j].newyp = entities[j].yp + int(entities[j].vy);
             if (testwallsy(j, map, entities[j].xp, entities[j].newyp))
@@ -5222,7 +5224,7 @@ void entityclass::scmmovingplatformfix( int t, mapclass& map )
         entities[j].yp = entities[j].yp +  (entities[j].vy);
         if (entitycollide(t, j))
         {
-            entities[j].yp = entities[j].yp -  (entities[j].vy);
+            entities[j].yp = entities[j].yp -  (entities[j].vy) -1;
             entities[j].vy = entities[t].vy;
             entities[j].newyp = static_cast<float>(entities[j].yp) + entities[j].vy;
             if (testwallsy(j, map, entities[j].xp, entities[j].newyp))

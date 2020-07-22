@@ -5397,13 +5397,13 @@ void teleport_to_portal(char entry_orientation, char exit_orientation, entclass&
     {
         case 'u':
             x += u;
-            y -= 10;
+            y -= 12;
             if (player.vy >= 0)
                 player.vy = -10;
             break;
         case 'd':
             x += u;
-            y += 10;
+            y += 12;
             if (player.vy <= 0)
                 player.vy = 10;
             break;
@@ -5445,9 +5445,10 @@ void entityclass::entitycollisioncheck( Graphics& dwgfx, Game& game, mapclass& m
                         {
                             if (portal_free_space(orange_portal_orientation, map, entities[orange_portal_index]))
                             {
-                                if (player_portal_teleport_cooldown >= 0)
+                                if ((player_portal_teleport_cooldown >= 0) &&
+                                    ((game.gravitycontrol == 0 && blue_portal_orientation != 'd') || (game.gravitycontrol == 1 && blue_portal_orientation != 'u')))
                                 {
-                                    player_portal_teleport_cooldown = 4;
+                                    player_portal_teleport_cooldown = 6;
                                     music.playef(8,10);
                                     teleport_to_portal(blue_portal_orientation, orange_portal_orientation, entities[i], entities[j], entities[orange_portal_index]);
                                 }
@@ -5460,9 +5461,10 @@ void entityclass::entitycollisioncheck( Graphics& dwgfx, Game& game, mapclass& m
                         {
                             if (portal_free_space(blue_portal_orientation, map, entities[blue_portal_index]))
                             {
-                                if (player_portal_teleport_cooldown <= 0)
+                                if ((player_portal_teleport_cooldown <= 0) &&
+                                    ((game.gravitycontrol == 0 && orange_portal_orientation != 'd') || (game.gravitycontrol == 1 && orange_portal_orientation != 'u')))
                                 {
-                                    player_portal_teleport_cooldown = -4;
+                                    player_portal_teleport_cooldown = -6;
                                     music.playef(8,10);
                                     teleport_to_portal(orange_portal_orientation, blue_portal_orientation, entities[i], entities[j], entities[blue_portal_index]);
                                 }

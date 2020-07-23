@@ -5409,13 +5409,13 @@ void teleport_to_portal(char entry_orientation, char exit_orientation, entclass&
             break;
         case 'l':
             x -= 8;
-            y += u;
+            //y += u;
             if (player.vx >= 0)
                 player.vx = -4;
             break;
         case 'r':
             x += 8;
-            y += u;
+            //y += u;
             if (player.vx <= 0)
                 player.vx = 4;
             break;

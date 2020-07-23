@@ -1732,7 +1732,10 @@ void gameinput(KeyPoll& key, Graphics& dwgfx, Game& game, mapclass& map,
 {
     //mouse input
     game.mx = key.mx;
-    game.my = key.my;
+    if (dwgfx.flipmode)
+        game.my = 240 - key.my;
+    else
+        game.my = key.my;
     game.leftclick = (key.leftbutton == 1);
     game.rightclick = (key.rightbutton == 1);
     if (key.leftbutton_rising_edge)

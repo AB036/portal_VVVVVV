@@ -5448,7 +5448,8 @@ void entityclass::entitycollisioncheck( Graphics& dwgfx, Game& game, mapclass& m
                                 if ((player_portal_teleport_cooldown >= 0) &&
                                     ((game.gravitycontrol == 0 && blue_portal_orientation != 'd') || (game.gravitycontrol == 1 && blue_portal_orientation != 'u')))
                                 {
-                                    player_portal_teleport_cooldown = 6;
+                                    if (entities[i].rule == 0) player_portal_teleport_cooldown = 6;
+                                    else player_portal_teleport_cooldown = 2;
                                     music.playef(8,10);
                                     teleport_to_portal(blue_portal_orientation, orange_portal_orientation, entities[i], entities[j], entities[orange_portal_index]);
                                 }
@@ -5464,7 +5465,8 @@ void entityclass::entitycollisioncheck( Graphics& dwgfx, Game& game, mapclass& m
                                 if ((player_portal_teleport_cooldown <= 0) &&
                                     ((game.gravitycontrol == 0 && orange_portal_orientation != 'd') || (game.gravitycontrol == 1 && orange_portal_orientation != 'u')))
                                 {
-                                    player_portal_teleport_cooldown = -6;
+                                    if (entities[i].rule == 0) player_portal_teleport_cooldown = -6;
+                                    else player_portal_teleport_cooldown = -2;
                                     music.playef(8,10);
                                     teleport_to_portal(orange_portal_orientation, blue_portal_orientation, entities[i], entities[j], entities[blue_portal_index]);
                                 }

@@ -85,9 +85,14 @@ void titlerender(Graphics& dwgfx, mapclass& map, Game& game, entityclass& obj, U
             dwgfx.drawsprite((160 - 96) + 3 * 32, temp, 23, tr, tg, tb);
             dwgfx.drawsprite((160 - 96) + 4 * 32, temp, 23, tr, tg, tb);
             dwgfx.drawsprite((160 - 96) + 5 * 32, temp, 23, tr, tg, tb);
-						#if defined(MAKEANDPLAY)
-							dwgfx.Print(-1,temp+35,"     MAKE AND PLAY EDITION",tr, tg, tb, true);
-						#endif
+				#if defined(MAKEANDPLAY)
+					dwgfx.Print(-1,temp+35,"     MAKE AND PLAY EDITION",tr, tg, tb, true);
+                    dwgfx.Print(-1,temp+47,"                 PORTAL    ",8, 203, 255, true);
+                    dwgfx.Print(-1,temp+47,"                        MOD",255, 193, 2, true);
+                #else
+                    dwgfx.Print(-1,temp+35,"                 PORTAL    ",8, 203, 255, true);
+                    dwgfx.Print(-1,temp+35,"                        MOD",255, 193, 2, true);
+				#endif
             dwgfx.Print( 310 - (4*8), 230, "v2.2", tr/2, tg/2, tb/2);
 
 						if(music.mmmmmm){

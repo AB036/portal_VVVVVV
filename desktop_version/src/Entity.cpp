@@ -5445,8 +5445,8 @@ void entityclass::entitycollisioncheck( Graphics& dwgfx, Game& game, mapclass& m
                         {
                             if (portal_free_space(orange_portal_orientation, map, entities[orange_portal_index]))
                             {
-                                if ((player_portal_teleport_cooldown >= 0) &&
-                                    ((game.gravitycontrol == 0 && blue_portal_orientation != 'd') || (game.gravitycontrol == 1 && blue_portal_orientation != 'u')))
+                                if ((player_portal_teleport_cooldown >= 0) && ( entities[i].rule != 0 ||
+                                    ((game.gravitycontrol == 0 && blue_portal_orientation != 'd') || (game.gravitycontrol == 1 && blue_portal_orientation != 'u'))))
                                 {
                                     if (entities[i].rule == 0) player_portal_teleport_cooldown = 6;
                                     else player_portal_teleport_cooldown = 2;
@@ -5462,8 +5462,8 @@ void entityclass::entitycollisioncheck( Graphics& dwgfx, Game& game, mapclass& m
                         {
                             if (portal_free_space(blue_portal_orientation, map, entities[blue_portal_index]))
                             {
-                                if ((player_portal_teleport_cooldown <= 0) &&
-                                    ((game.gravitycontrol == 0 && orange_portal_orientation != 'd') || (game.gravitycontrol == 1 && orange_portal_orientation != 'u')))
+                                if ((player_portal_teleport_cooldown <= 0) && ( entities[i].rule != 0 ||
+                                    ((game.gravitycontrol == 0 && orange_portal_orientation != 'd') || (game.gravitycontrol == 1 && orange_portal_orientation != 'u'))))
                                 {
                                     if (entities[i].rule == 0) player_portal_teleport_cooldown = -6;
                                     else player_portal_teleport_cooldown = -2;

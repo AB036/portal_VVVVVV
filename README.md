@@ -4,6 +4,8 @@ This is my fork of VVVVVV. It adds portal mechanics using the mouse. Levels are 
 
 For more context about the original game source code release, see the [announcement](http://distractionware.com/blog/2020/01/vvvvvv-is-now-open-source/) on Terry's blog!
 
+See my [blog post](https://meteorcall.com/pages/portal_vvvvvv.html) for more context about the mod.
+
 License
 -------
 VVVVVV's source code is made available under a custom license. See [LICENSE.md](LICENSE.md) for more details.
